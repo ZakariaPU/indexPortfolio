@@ -60,6 +60,7 @@
     --border-strong:rgba(15,23,42,0.12);
     --glass:rgba(255,255,255,0.66);
     --glass-navy:rgba(15,23,42,0.55);
+    --card-bg:#FFFFFF;
     --radius-lg:24px;
     --radius-md:16px;
     --radius-sm:10px;
@@ -80,15 +81,25 @@
     --glass:rgba(17,24,39,0.6);
     --glass-navy:rgba(15,23,42,0.7);
     --ink:#F1F5F9;
+    --card-bg:#141E33;
     color-scheme:dark;
   }
   [data-theme="dark"] body{background:var(--bg);color:var(--ink);}
+  /* section backgrounds: sections that were plain white in light mode fall back
+     to the page background in dark mode, so cards (below) can stay visually
+     distinct from the section instead of blending into it */
   [data-theme="dark"] #experience,
   [data-theme="dark"] #skills,
   [data-theme="dark"] #certs,
   [data-theme="dark"] #casestudies,
-  [data-theme="dark"] #samples,
+  [data-theme="dark"] #tools{
+    background:var(--bg);
+  }
+  /* elevated surfaces: cards, pills, and popovers get a dedicated tone that is
+     distinct from BOTH --bg and --bg-subtle so they never disappear into the
+     section they sit on */
   [data-theme="dark"] .stat-card,
+  [data-theme="dark"] .tl-card,
   [data-theme="dark"] .tl-period,
   [data-theme="dark"] .cs-col,
   [data-theme="dark"] .cs-tab,
@@ -97,11 +108,23 @@
   [data-theme="dark"] .lead-card,
   [data-theme="dark"] .proj-card,
   [data-theme="dark"] .sample-card,
+  [data-theme="dark"] .mt-card,
+  [data-theme="dark"] .chip,
   [data-theme="dark"] .cmdk-trigger kbd,
   [data-theme="dark"] #cmdPalette,
-  [data-theme="dark"] .cmd-footer kbd{
-    background:var(--bg-subtle);
+  [data-theme="dark"] .cmd-footer kbd,
+  [data-theme="dark"] .tool-card,
+  [data-theme="dark"] .testi-card,
+  [data-theme="dark"] .modal-box,
+  [data-theme="dark"] .dg-box,
+  [data-theme="dark"] .dg-box-head,
+  [data-theme="dark"] .dg-controls button{
+    background:var(--card-bg);
   }
+  [data-theme="dark"] .modal-close{background:rgba(255,255,255,0.08);}
+  [data-theme="dark"] .dg-controls button{color:var(--ink);border-color:var(--border-strong);}
+  [data-theme="dark"] .dg-box-head h4{color:var(--ink);}
+  [data-theme="dark"] .dg-controls button:hover{background:rgba(255,255,255,0.08);}
   [data-theme="dark"] #hero{
     background:
       radial-gradient(1100px 620px at 82% -8%, rgba(79,70,229,0.16), transparent 60%),
@@ -480,41 +503,67 @@
   .prof-panel.in .prof-bar-fill{width:var(--fill);}
 
   /* ---------- mini / horizontal career timeline ---------- */
-  .mini-timeline{margin-bottom:52px;}
+  .mini-timeline{margin-bottom:56px;position:relative;}
   .mt-scroll{
-    overflow-x:auto;overflow-y:hidden;padding:10px 4px 22px;
+    overflow-x:auto;overflow-y:hidden;padding:16px 2px 20px;
     scrollbar-width:thin;scrollbar-color:var(--border-strong) transparent;
     -webkit-overflow-scrolling:touch;
+    scroll-snap-type:x proximity;
+    mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 18px,#000 calc(100% - 18px),transparent 100%);
   }
   .mt-scroll::-webkit-scrollbar{height:5px;}
   .mt-scroll::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:100px;}
   .mt-scroll::-webkit-scrollbar-track{background:transparent;}
   .mt-track{
     position:relative;display:flex;align-items:flex-start;
-    min-width:max-content;padding:0 6px;
+    min-width:max-content;padding:0 22px;
   }
   .mt-track::before{
-    content:'';position:absolute;left:0;right:0;top:29px;height:1.5px;
-    background:linear-gradient(90deg,var(--border-strong),var(--border-strong));
+    content:'';position:absolute;left:22px;right:22px;top:35px;height:2px;
+    background:linear-gradient(90deg,var(--indigo) 0%,var(--border-strong) 10%,var(--border-strong) 90%,var(--indigo) 100%);
+    opacity:0.55;
   }
   .mt-item{
-    position:relative;width:190px;flex:0 0 auto;padding-top:16px;
+    position:relative;width:208px;flex:0 0 auto;padding:0 16px;
     scroll-snap-align:start;
   }
-  .mt-scroll{scroll-snap-type:x proximity;}
   .mt-year{
-    font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;
-    color:var(--slate);margin-bottom:8px;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;
+    letter-spacing:0.02em;
+    color:var(--slate);margin-bottom:13px;
   }
   .mt-dot{
-    position:relative;width:15px;height:15px;border-radius:50%;
-    background:#fff;border:2px solid var(--indigo);z-index:2;
-    box-shadow:0 0 0 5px #fff;margin-bottom:14px;
+    position:relative;width:17px;height:17px;border-radius:50%;
+    background:var(--card-bg);border:2.5px solid var(--indigo);z-index:2;
+    box-shadow:0 0 0 6px var(--bg);margin-bottom:18px;
+    transition:transform .3s var(--ease);
   }
-  .mt-item.current .mt-dot{background:var(--indigo);}
+  .mt-item:hover .mt-dot{transform:scale(1.14);}
+  .mt-item.current .mt-dot{
+    background:var(--indigo);
+    box-shadow:0 0 0 6px var(--bg), 0 0 0 9.5px rgba(79,70,229,0.18);
+  }
   .mt-item.current .mt-year{color:var(--indigo);}
-  .mt-label{font-size:12.5px;line-height:1.55;color:var(--navy-soft);font-weight:500;padding-right:20px;}
-  .mt-role{font-size:11.5px;color:var(--indigo);font-weight:600;margin-top:3px;}
+  .mt-card{
+    background:var(--card-bg);border:1px solid var(--border);border-radius:14px;
+    padding:14px 15px 15px;min-height:88px;
+    transition:transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s;
+  }
+  .mt-item:hover .mt-card{
+    transform:translateY(-4px);
+    box-shadow:0 16px 30px -16px rgba(15,23,42,0.2);
+    border-color:var(--border-strong);
+  }
+  .mt-item.current .mt-card{border-color:rgba(79,70,229,0.35);}
+  .mt-label{font-size:12.5px;line-height:1.55;color:var(--navy-soft);font-weight:600;}
+  .mt-role{font-size:11px;color:var(--indigo);font-weight:600;margin-top:6px;}
+  .mt-hint{
+    display:flex;align-items:center;gap:6px;margin-top:2px;
+    font-size:11.5px;color:var(--slate-light);font-family:'IBM Plex Mono',monospace;
+  }
+  .mt-hint svg{width:13px;height:13px;}
+  @media (min-width:900px){.mt-hint{display:none;}}
 
   /* ---------- work samples ---------- */
   #samples{background:var(--bg-subtle);}
@@ -646,6 +695,110 @@
   .lead-card h4{font-size:15px;font-weight:700;color:var(--ink);margin-top:8px;line-height:1.4;}
   .lead-card .role{font-size:12.5px;color:var(--indigo);font-weight:600;margin-top:4px;}
   .lead-card p{font-size:13px;color:var(--slate);margin-top:12px;line-height:1.6;}
+
+  /* ---------- sample diagram expand ---------- */
+  .sample-svg-wrap{position:relative;cursor:zoom-in;}
+  .sample-expand{
+    position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:8px;
+    background:rgba(15,23,42,0.55);backdrop-filter:blur(6px);color:#fff;
+    display:flex;align-items:center;justify-content:center;opacity:0;
+    transition:opacity .3s var(--ease);pointer-events:none;
+  }
+  .sample-svg-wrap:hover .sample-expand{opacity:1;}
+  .sample-expand svg{width:14px;height:14px;}
+
+  /* ---------- project card / case study detail trigger ---------- */
+  .proj-card{cursor:pointer;}
+  .proj-more{display:inline-flex;align-items:center;gap:5px;margin-top:16px;font-size:12px;font-weight:600;color:var(--indigo);}
+  .proj-more svg{width:13px;height:13px;transition:transform .3s var(--ease);}
+  .proj-card:hover .proj-more svg{transform:translateX(3px);}
+  .cs-more{display:inline-flex;align-items:center;gap:6px;margin-top:24px;font-size:13px;font-weight:600;color:var(--indigo);cursor:pointer;background:none;border:none;padding:0;font-family:'Poppins',sans-serif;}
+  .cs-more svg{width:14px;height:14px;}
+
+  /* ---------- generic detail modal ---------- */
+  .modal-overlay{
+    position:fixed;inset:0;z-index:300;background:rgba(15,23,42,0.55);
+    backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;
+    padding:24px;opacity:0;transition:opacity .3s var(--ease);
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-overlay.show{opacity:1;}
+  .modal-box{
+    background:var(--bg);border-radius:var(--radius-lg);max-width:640px;width:100%;
+    max-height:86vh;overflow-y:auto;position:relative;padding:34px;
+    box-shadow:0 40px 80px -20px rgba(15,23,42,0.5);
+    transform:translateY(14px) scale(.98);transition:transform .35s var(--ease);
+  }
+  .modal-overlay.show .modal-box{transform:translateY(0) scale(1);}
+  .modal-close{
+    position:absolute;top:18px;right:18px;width:34px;height:34px;border-radius:50%;
+    background:rgba(15,23,42,0.05);border:none;display:flex;align-items:center;justify-content:center;
+    cursor:pointer;color:var(--ink);transition:background .3s;
+  }
+  .modal-close:hover{background:rgba(15,23,42,0.1);}
+  .modal-icon{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--navy),var(--indigo));display:flex;align-items:center;justify-content:center;margin-bottom:18px;}
+  .modal-icon svg{width:22px;height:22px;color:#fff;}
+  .modal-box h3{font-size:21px;font-weight:700;color:var(--ink);line-height:1.3;}
+  .modal-org{font-size:13px;color:var(--indigo);font-weight:600;margin-top:6px;}
+  .modal-period{font-size:11.5px;color:var(--slate-light);margin-top:2px;font-family:'IBM Plex Mono',monospace;}
+  .modal-desc{margin-top:16px;font-size:13.5px;line-height:1.7;color:var(--slate);}
+  .modal-sub{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:var(--slate-light);margin-top:22px;margin-bottom:10px;}
+  .modal-list{list-style:none;display:flex;flex-direction:column;gap:9px;}
+  .modal-list li{font-size:13px;line-height:1.6;color:var(--navy-soft);padding-left:18px;position:relative;}
+  .modal-list li::before{content:'';position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--indigo);}
+  .modal-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+
+  /* ---------- diagram lightbox (zoom/pan) ---------- */
+  .dg-overlay{
+    position:fixed;inset:0;z-index:300;background:rgba(9,13,24,0.86);
+    display:none;align-items:center;justify-content:center;padding:30px;
+    opacity:0;transition:opacity .3s var(--ease);
+  }
+  .dg-overlay.open{display:flex;}
+  .dg-overlay.show{opacity:1;}
+  .dg-box{max-width:900px;width:100%;background:#fff;border-radius:var(--radius-lg);overflow:hidden;transform:scale(.96);transition:transform .35s var(--ease);}
+  .dg-overlay.show .dg-box{transform:scale(1);}
+  .dg-box-head{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid var(--border);}
+  .dg-box-head h4{font-size:14px;font-weight:700;color:var(--navy);}
+  .dg-controls{display:flex;align-items:center;gap:8px;}
+  .dg-controls button{width:30px;height:30px;border-radius:8px;border:1px solid var(--border-strong);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--navy);}
+  .dg-controls button:hover{background:var(--bg-subtle);}
+  .dg-controls svg{width:14px;height:14px;}
+  .dg-canvas{overflow:hidden;background:#FDFDFE;cursor:grab;touch-action:none;}
+  .dg-canvas.grabbing{cursor:grabbing;}
+  .dg-canvas-inner{transform-origin:0 0;}
+  .dg-canvas-inner svg{display:block;width:100%;height:auto;}
+
+  /* ---------- tools & stack ---------- */
+  #tools{background:#fff;}
+  .tools-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;}
+  @media (max-width:940px){.tools-grid{grid-template-columns:repeat(4,1fr);}}
+  @media (max-width:560px){.tools-grid{grid-template-columns:repeat(3,1fr);}}
+  .tool-card{
+    border:1px solid var(--border);border-radius:var(--radius-md);
+    padding:20px 12px;display:flex;flex-direction:column;align-items:center;gap:10px;
+    text-align:center;transition:transform .35s var(--ease), box-shadow .35s var(--ease);
+  }
+  .tool-card:hover{transform:translateY(-4px);box-shadow:0 14px 30px -16px rgba(15,23,42,0.18);}
+  .tool-card .tool-icon{width:38px;height:38px;border-radius:10px;background:var(--bg-subtle);display:flex;align-items:center;justify-content:center;color:var(--indigo);}
+  .tool-card .tool-icon svg{width:18px;height:18px;}
+  .tool-card span{font-size:11.5px;font-weight:600;color:var(--navy-soft);}
+
+  /* ---------- testimonials ---------- */
+  #testimonials{background:var(--bg-subtle);}
+  .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  @media (max-width:860px){.testi-grid{grid-template-columns:1fr;}}
+  .testi-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:26px;transition:transform .4s var(--ease), box-shadow .4s var(--ease);}
+  .testi-card:hover{transform:translateY(-4px);box-shadow:0 18px 36px -16px rgba(15,23,42,0.16);}
+  .testi-quote-icon{color:var(--indigo);opacity:.35;margin-bottom:10px;}
+  .testi-quote-icon svg{width:24px;height:24px;}
+  .testi-card p{font-size:13.5px;line-height:1.7;color:var(--navy-soft);font-style:italic;}
+  .testi-foot{display:flex;align-items:center;gap:12px;margin-top:20px;}
+  .testi-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--navy),var(--indigo));display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;flex-shrink:0;}
+  .testi-name{font-size:13px;font-weight:700;color:var(--ink);}
+  .testi-role{font-size:11.5px;color:var(--slate);}
+  .testi-note{margin-top:22px;font-size:12.5px;color:var(--slate-light);display:flex;align-items:flex-start;gap:8px;max-width:760px;}
+  .testi-note svg{width:15px;height:15px;flex-shrink:0;margin-top:1px;}
 
   /* ---------- contact / cta ---------- */
   #contact{
@@ -886,7 +1039,9 @@
   <a href="#casestudies" data-i18n="nav.casestudies">Case Studies</a>
   <a href="#samples" data-i18n="nav.samples">Work Samples</a>
   <a href="#skills" data-i18n="nav.skills">Skills</a>
+  <a href="#tools" data-i18n="nav.tools">Tools &amp; Stack</a>
   <a href="#education" data-i18n="nav.education">Education</a>
+  <a href="#testimonials" data-i18n="nav.testimonials">Testimonials</a>
   <a href="#contact" data-i18n="nav.contact">Contact</a>
   <div style="display:flex;align-items:center;gap:14px;margin-top:18px;">
     <div class="lang-toggle mobile-lang" id="langToggleMobile" data-lang="en">
@@ -1002,39 +1157,52 @@
           <div class="mt-item">
             <div class="mt-year">2023</div>
             <div class="mt-dot"></div>
-            <div class="mt-label" data-i18n="mt1.label">National Business Plan Competition — 1st &amp; 2nd place</div>
+            <div class="mt-card">
+              <div class="mt-label" data-i18n="mt1.label">National Business Plan Competition — 1st &amp; 2nd place</div>
+            </div>
           </div>
           <div class="mt-item">
             <div class="mt-year">Dec 2024</div>
             <div class="mt-dot"></div>
-            <div class="mt-label" data-i18n="mt2.label">Business Analyst (Part-time)</div>
-            <div class="mt-role">PT Hanjaya Dayari Raya</div>
+            <div class="mt-card">
+              <div class="mt-label" data-i18n="mt2.label">Business Analyst (Part-time)</div>
+              <div class="mt-role">PT Hanjaya Dayari Raya</div>
+            </div>
           </div>
           <div class="mt-item">
             <div class="mt-year">Feb 2025</div>
             <div class="mt-dot"></div>
-            <div class="mt-label" data-i18n="mt3.label">System Analyst Intern</div>
-            <div class="mt-role">PT Sineas Kreatif Indonesia</div>
+            <div class="mt-card">
+              <div class="mt-label" data-i18n="mt3.label">System Analyst Intern</div>
+              <div class="mt-role">PT Sineas Kreatif Indonesia</div>
+            </div>
           </div>
           <div class="mt-item">
             <div class="mt-year">May 2025</div>
             <div class="mt-dot"></div>
-            <div class="mt-label" data-i18n="mt4.label">System Analyst — joined</div>
-            <div class="mt-role">PT Acarya Data Esa</div>
+            <div class="mt-card">
+              <div class="mt-label" data-i18n="mt4.label">System Analyst — joined</div>
+              <div class="mt-role">PT Acarya Data Esa</div>
+            </div>
           </div>
           <div class="mt-item">
             <div class="mt-year">Aug 2025</div>
             <div class="mt-dot"></div>
-            <div class="mt-label" data-i18n="mt5.label">Graduated Cum Laude — GPA 3.82</div>
-            <div class="mt-role">Universitas Atma Jaya Yogyakarta</div>
+            <div class="mt-card">
+              <div class="mt-label" data-i18n="mt5.label">Graduated Cum Laude — GPA 3.82</div>
+              <div class="mt-role">Universitas Atma Jaya Yogyakarta</div>
+            </div>
           </div>
           <div class="mt-item current">
             <div class="mt-year">2026</div>
             <div class="mt-dot"></div>
-            <div class="mt-label" data-i18n="mt6.label">Present — still building systems</div>
+            <div class="mt-card">
+              <div class="mt-label" data-i18n="mt6.label">Present — still building systems</div>
+            </div>
           </div>
         </div>
       </div>
+      <div class="mt-hint"><span data-lucide="move-horizontal"></span><span data-i18n="mt.hint">Swipe to see the full timeline</span></div>
     </div>
 
     <div class="timeline">
@@ -1105,47 +1273,53 @@
     </div>
 
     <div class="proj-grid reveal-stagger reveal">
-      <div class="proj-card" data-tilt>
+      <div class="proj-card" data-tilt data-proj="1">
         <div class="proj-icon"><span data-lucide="package-check"></span></div>
         <h4 data-i18n="proj1.h">e-Procurement ERP — Goods Receipt Module</h4>
         <div class="proj-role">PT Amara Tujuh Perjuangan (7E) · Functional Analyst &amp; Testing</div>
         <div class="proj-period">May 2026 — Jul 2026</div>
         <p data-i18n="proj1.p">Gathered requirements from 5+ stakeholder discussions and translated them into functional specs for the GR module. Ran 20+ UAT scenarios and resolved 10+ functional issues before go-live.</p>
+        <span class="proj-more"><span data-i18n="proj.more">View detail</span> <span data-lucide="arrow-right"></span></span>
       </div>
-      <div class="proj-card" data-tilt>
+      <div class="proj-card" data-tilt data-proj="2">
         <div class="proj-icon"><span data-lucide="users"></span></div>
         <h4 data-i18n="proj2.h">ERP Implementation — HRIS &amp; Helpdesk</h4>
         <div class="proj-role">PT Cakrawala Rentalindo Sejahtera · Functional Analyst &amp; Testing</div>
         <div class="proj-period">Feb 2026 — Jun 2026</div>
         <p data-i18n="proj2.p">Configured Odoo HRIS and Helpdesk modules — role-based access, approval routing, and SLA rules. Resolved 15+ hypercare issues, each closed within agreed SLA windows.</p>
+        <span class="proj-more"><span data-i18n="proj.more">View detail</span> <span data-lucide="arrow-right"></span></span>
       </div>
-      <div class="proj-card" data-tilt>
+      <div class="proj-card" data-tilt data-proj="3">
         <div class="proj-icon"><span data-lucide="git-pull-request"></span></div>
         <h4 data-i18n="proj3.h">e-Procurement Platform</h4>
         <div class="proj-role">PT Arya Noble · System Analyst &amp; Testing</div>
         <div class="proj-period">Feb 2026 — May 2026</div>
         <p data-i18n="proj3.p">Managed 7 change requests end-to-end and served as single point of contact between 4 business stakeholders and the dev team — eliminating clarification bottlenecks.</p>
+        <span class="proj-more"><span data-i18n="proj.more">View detail</span> <span data-lucide="arrow-right"></span></span>
       </div>
-      <div class="proj-card" data-tilt>
+      <div class="proj-card" data-tilt data-proj="4">
         <div class="proj-icon"><span data-lucide="zap"></span></div>
         <h4 data-i18n="proj4.h">Power Platform Automation</h4>
         <div class="proj-role">PT Kraft Heinz Indonesia · Jr. Consultant, Power Platform</div>
         <div class="proj-period">Oct 2025 — Feb 2026</div>
         <p data-i18n="proj4.p">Scoped 4 automation opportunities across procurement and designed Power Apps/Automate workflows with SAP integration — an estimated 8–10 hrs/week saved.</p>
+        <span class="proj-more"><span data-i18n="proj.more">View detail</span> <span data-lucide="arrow-right"></span></span>
       </div>
-      <div class="proj-card" data-tilt>
+      <div class="proj-card" data-tilt data-proj="5">
         <div class="proj-icon"><span data-lucide="file-search"></span></div>
         <h4 data-i18n="proj5.h">Vendor &amp; Contract Management</h4>
         <div class="proj-role">PT Trakindo Utama · System Analyst &amp; Testing</div>
         <div class="proj-period">May 2025 — Oct 2025</div>
         <p data-i18n="proj5.p">Mapped the full vendor lifecycle across 3 departments into 60+ documented business rules, and designed a contract dashboard with automated expiry alerts.</p>
+        <span class="proj-more"><span data-i18n="proj.more">View detail</span> <span data-lucide="arrow-right"></span></span>
       </div>
-      <div class="proj-card" data-tilt>
+      <div class="proj-card" data-tilt data-proj="6">
         <div class="proj-icon"><span data-lucide="chef-hat"></span></div>
         <h4 data-i18n="proj6.h">Catering Order Management System</h4>
         <div class="proj-role">Resap Kitchen (Thesis Project) · System Analysis &amp; Design</div>
         <div class="proj-period" data-i18n="proj6.period">Bachelor Thesis</div>
         <p data-i18n="proj6.p">Designed and implemented a web-based order management system using Waterfall methodology — covering system analysis, business process design, UI/UX, and database design.</p>
+        <span class="proj-more"><span data-i18n="proj.more">View detail</span> <span data-lucide="arrow-right"></span></span>
       </div>
     </div>
   </div>
@@ -1194,6 +1368,7 @@
             <div class="cs-col process"><span class="cs-tag" data-i18n="cs.process">Process</span><p data-i18n="cs.t.process">Mapped the full vendor lifecycle end-to-end and translated findings into system requirements — registration, evaluation scoring, and KPI/SLA tracking — spanning 60+ documented business rules.</p></div>
             <div class="cs-col after"><span class="cs-tag" data-i18n="cs.result">Result</span><p data-i18n="cs.t.after">Designed a contract monitoring dashboard with automated expiry alerts, converting the procurement team's renewal process from reactive to proactive.</p></div>
           </div>
+          <button class="cs-more" data-cs-detail="trakindo"><span data-i18n="cs.more">View full breakdown</span> <span data-lucide="arrow-right"></span></button>
         </div>
       </div>
 
@@ -1224,6 +1399,7 @@
             <div class="cs-col process"><span class="cs-tag" data-i18n="cs.process">Process</span><p data-i18n="cs.k.process">Identified and scoped 4 automation opportunities across procurement, then designed Power Apps and Power Automate workflows with SAP integration.</p></div>
             <div class="cs-col after"><span class="cs-tag" data-i18n="cs.result">Result</span><p data-i18n="cs.k.after">Estimated combined savings of 8–10 hours per week in manual data entry and approval routing across the impacted teams.</p></div>
           </div>
+          <button class="cs-more" data-cs-detail="kraftheinz"><span data-i18n="cs.more">View full breakdown</span> <span data-lucide="arrow-right"></span></button>
         </div>
       </div>
     </div>
@@ -1249,7 +1425,8 @@
             <div class="sh-sub" data-i18n="samp1.sub">Purchase request approval flow</div>
           </div>
         </div>
-        <div class="sample-svg-wrap">
+        <div class="sample-svg-wrap dg-trigger">
+          <span class="sample-expand"><span data-lucide="maximize-2"></span></span>
           <svg viewBox="0 0 400 270" xmlns="http://www.w3.org/2000/svg">
             <rect width="400" height="270" fill="#FDFDFE"/>
             <!-- lanes -->
@@ -1312,7 +1489,8 @@
             <div class="sh-sub" data-i18n="samp2.sub">Procurement system, simplified</div>
           </div>
         </div>
-        <div class="sample-svg-wrap">
+        <div class="sample-svg-wrap dg-trigger">
+          <span class="sample-expand"><span data-lucide="maximize-2"></span></span>
           <svg viewBox="0 0 400 270" xmlns="http://www.w3.org/2000/svg">
             <rect width="400" height="270" fill="#FDFDFE"/>
             <!-- system boundary -->
@@ -1370,7 +1548,8 @@
             <div class="sh-sub" data-i18n="samp3.sub">Purchase request &amp; vendor</div>
           </div>
         </div>
-        <div class="sample-svg-wrap">
+        <div class="sample-svg-wrap dg-trigger">
+          <span class="sample-expand"><span data-lucide="maximize-2"></span></span>
           <svg viewBox="0 0 400 270" xmlns="http://www.w3.org/2000/svg">
             <rect width="400" height="270" fill="#FDFDFE"/>
 
@@ -1411,6 +1590,142 @@
           </svg>
         </div>
         <p class="sample-caption" data-i18n="samp3.cap">Entities, keys, and cardinality — the layer that keeps database design and functional spec in sync.</p>
+      </div>
+
+      <!-- Sample 4: Sequence Diagram -->
+      <div class="sample-card">
+        <div class="sample-head">
+          <div class="sh-icon"><span data-lucide="arrow-left-right"></span></div>
+          <div>
+            <h4 data-i18n="samp4.h">Sequence Diagram</h4>
+            <div class="sh-sub" data-i18n="samp4.sub">Approval → ERP sync</div>
+          </div>
+        </div>
+        <div class="sample-svg-wrap dg-trigger">
+          <span class="sample-expand"><span data-lucide="maximize-2"></span></span>
+          <svg viewBox="0 0 400 270" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="270" fill="#FDFDFE"/>
+            <!-- lifelines -->
+            <text x="60" y="26" text-anchor="middle" font-family="Poppins, sans-serif" font-size="9" font-weight="700" fill="#334155">Requester</text>
+            <text x="160" y="26" text-anchor="middle" font-family="Poppins, sans-serif" font-size="9" font-weight="700" fill="#334155">System</text>
+            <text x="270" y="26" text-anchor="middle" font-family="Poppins, sans-serif" font-size="9" font-weight="700" fill="#334155">Approver</text>
+            <text x="360" y="26" text-anchor="middle" font-family="Poppins, sans-serif" font-size="9" font-weight="700" fill="#334155">ERP</text>
+            <line x1="60" y1="36" x2="60" y2="248" stroke="#CBD5E1" stroke-width="1.2" stroke-dasharray="3 3"/>
+            <line x1="160" y1="36" x2="160" y2="248" stroke="#CBD5E1" stroke-width="1.2" stroke-dasharray="3 3"/>
+            <line x1="270" y1="36" x2="270" y2="248" stroke="#CBD5E1" stroke-width="1.2" stroke-dasharray="3 3"/>
+            <line x1="360" y1="36" x2="360" y2="248" stroke="#CBD5E1" stroke-width="1.2" stroke-dasharray="3 3"/>
+            <!-- activation bars -->
+            <rect x="156" y="60" width="8" height="150" fill="#EEF2FF" stroke="#4F46E5" stroke-width="1"/>
+            <defs><marker id="arrSeq" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#475569"/></marker></defs>
+            <line x1="60" y1="65" x2="156" y2="65" stroke="#475569" stroke-width="1.2" marker-end="url(#arrSeq)"/>
+            <text x="108" y="59" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#475569">submitPR()</text>
+            <line x1="164" y1="95" x2="266" y2="95" stroke="#475569" stroke-width="1.2" marker-end="url(#arrSeq)"/>
+            <text x="215" y="89" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#475569">notify(approver)</text>
+            <rect x="266" y="95" width="8" height="34" fill="#FFF7ED" stroke="#EA580C" stroke-width="1"/>
+            <line x1="270" y1="140" x2="164" y2="140" stroke="#94A3B8" stroke-width="1.1" stroke-dasharray="3 3" marker-end="url(#arrSeq)"/>
+            <text x="215" y="134" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#94A3B8">approve()</text>
+            <line x1="164" y1="170" x2="356" y2="170" stroke="#475569" stroke-width="1.2" marker-end="url(#arrSeq)"/>
+            <text x="260" y="164" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#475569">postToERP(pr)</text>
+            <rect x="356" y="170" width="8" height="30" fill="#ECFEFF" stroke="#0891B2" stroke-width="1"/>
+            <line x1="360" y1="205" x2="164" y2="205" stroke="#94A3B8" stroke-width="1.1" stroke-dasharray="3 3" marker-end="url(#arrSeq)"/>
+            <text x="260" y="199" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#94A3B8">syncOK</text>
+            <line x1="164" y1="225" x2="64" y2="225" stroke="#94A3B8" stroke-width="1.1" stroke-dasharray="3 3" marker-end="url(#arrSeq)"/>
+            <text x="112" y="219" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#94A3B8">statusUpdated</text>
+          </svg>
+        </div>
+        <p class="sample-caption" data-i18n="samp4.cap">Message order and activation lifetimes between actors and systems — used to validate integration timing before build.</p>
+      </div>
+
+      <!-- Sample 5: Data Flow Diagram -->
+      <div class="sample-card">
+        <div class="sample-head">
+          <div class="sh-icon"><span data-lucide="share-2"></span></div>
+          <div>
+            <h4 data-i18n="samp5.h">Data Flow Diagram</h4>
+            <div class="sh-sub" data-i18n="samp5.sub">Level 1 — PR intake</div>
+          </div>
+        </div>
+        <div class="sample-svg-wrap dg-trigger">
+          <span class="sample-expand"><span data-lucide="maximize-2"></span></span>
+          <svg viewBox="0 0 400 270" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="270" fill="#FDFDFE"/>
+            <!-- external entity -->
+            <rect x="20" y="105" width="88" height="50" fill="#fff" stroke="#0F172A" stroke-width="1.4"/>
+            <text x="64" y="134" text-anchor="middle" font-family="Poppins, sans-serif" font-size="9" font-weight="700" fill="#0F172A">Requester</text>
+            <!-- process circle -->
+            <circle cx="215" cy="70" r="42" fill="#EEF2FF" stroke="#4F46E5" stroke-width="1.4"/>
+            <text x="215" y="66" text-anchor="middle" font-family="Poppins, sans-serif" font-size="8.5" font-weight="700" fill="#312E81">1.0 Validate</text>
+            <text x="215" y="78" text-anchor="middle" font-family="Poppins, sans-serif" font-size="8.5" font-weight="700" fill="#312E81">PR data</text>
+            <!-- process circle 2 -->
+            <circle cx="215" cy="200" r="42" fill="#ECFEFF" stroke="#0891B2" stroke-width="1.4"/>
+            <text x="215" y="196" text-anchor="middle" font-family="Poppins, sans-serif" font-size="8.5" font-weight="700" fill="#164E63">2.0 Route</text>
+            <text x="215" y="208" text-anchor="middle" font-family="Poppins, sans-serif" font-size="8.5" font-weight="700" fill="#164E63">for approval</text>
+            <!-- data store -->
+            <path d="M300,120 h84 v40 h-84 z M300,120 h84 M300,160 h84" fill="#fff" stroke="#EA580C" stroke-width="1.4"/>
+            <text x="342" y="144" text-anchor="middle" font-family="Poppins, sans-serif" font-size="8.5" font-weight="700" fill="#7C2D12">D1 PR Store</text>
+            <!-- arrows -->
+            <defs><marker id="arrDFD" markerWidth="7" markerHeight="7" refX="5.5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#94A3B8"/></marker></defs>
+            <line x1="108" y1="120" x2="176" y2="90" stroke="#94A3B8" stroke-width="1.3" marker-end="url(#arrDFD)"/>
+            <text x="130" y="98" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#94A3B8">PR form</text>
+            <path d="M245,90 C280,105 300,110 300,130" fill="none" stroke="#94A3B8" stroke-width="1.3" marker-end="url(#arrDFD)"/>
+            <path d="M215,112 C215,140 215,155 215,158" fill="none" stroke="#94A3B8" stroke-width="1.3" marker-end="url(#arrDFD)"/>
+            <text x="222" y="140" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#94A3B8">valid PR</text>
+            <path d="M300,150 C270,165 250,175 245,182" fill="none" stroke="#94A3B8" stroke-width="1.3" marker-end="url(#arrDFD)"/>
+          </svg>
+        </div>
+        <p class="sample-caption" data-i18n="samp5.cap">Processes, data stores, and external entities — used early in analysis to confirm scope before writing the FSD.</p>
+      </div>
+
+      <!-- Sample 6: Class Diagram -->
+      <div class="sample-card">
+        <div class="sample-head">
+          <div class="sh-icon"><span data-lucide="box"></span></div>
+          <div>
+            <h4 data-i18n="samp6.h">Class Diagram</h4>
+            <div class="sh-sub" data-i18n="samp6.sub">PR domain model</div>
+          </div>
+        </div>
+        <div class="sample-svg-wrap dg-trigger">
+          <span class="sample-expand"><span data-lucide="maximize-2"></span></span>
+          <svg viewBox="0 0 400 270" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="270" fill="#FDFDFE"/>
+            <!-- class: PurchaseRequest -->
+            <rect x="130" y="18" width="150" height="104" rx="6" fill="#fff" stroke="#4F46E5" stroke-width="1.4"/>
+            <rect x="130" y="18" width="150" height="24" rx="6" fill="#4F46E5"/>
+            <rect x="130" y="34" width="150" height="8" fill="#4F46E5"/>
+            <text x="205" y="34" text-anchor="middle" font-family="Poppins, sans-serif" font-size="9" font-weight="700" fill="#fff">PurchaseRequest</text>
+            <line x1="130" y1="50" x2="280" y2="50" stroke="#C7D2FE" stroke-width="1"/>
+            <text x="138" y="63" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#334155">- id: UUID</text>
+            <text x="138" y="76" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#334155">- status: Enum</text>
+            <line x1="130" y1="86" x2="280" y2="86" stroke="#C7D2FE" stroke-width="1"/>
+            <text x="138" y="99" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#334155">+ submit()</text>
+            <text x="138" y="112" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#334155">+ cancel()</text>
+            <!-- class: Vendor -->
+            <rect x="20" y="165" width="130" height="86" rx="6" fill="#fff" stroke="#0891B2" stroke-width="1.4"/>
+            <rect x="20" y="165" width="130" height="24" rx="6" fill="#0891B2"/>
+            <rect x="20" y="181" width="130" height="8" fill="#0891B2"/>
+            <text x="85" y="181" text-anchor="middle" font-family="Poppins, sans-serif" font-size="9" font-weight="700" fill="#fff">Vendor</text>
+            <line x1="20" y1="197" x2="150" y2="197" stroke="#A5F3FC" stroke-width="1"/>
+            <text x="28" y="210" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#334155">- rating: int</text>
+            <line x1="20" y1="220" x2="150" y2="220" stroke="#A5F3FC" stroke-width="1"/>
+            <text x="28" y="233" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#334155">+ isActive()</text>
+            <!-- class: Approval -->
+            <rect x="250" y="165" width="130" height="86" rx="6" fill="#fff" stroke="#EA580C" stroke-width="1.4"/>
+            <rect x="250" y="165" width="130" height="24" rx="6" fill="#EA580C"/>
+            <rect x="250" y="181" width="130" height="8" fill="#EA580C"/>
+            <text x="315" y="181" text-anchor="middle" font-family="Poppins, sans-serif" font-size="9" font-weight="700" fill="#fff">Approval</text>
+            <line x1="250" y1="197" x2="380" y2="197" stroke="#FED7AA" stroke-width="1"/>
+            <text x="258" y="210" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#334155">- decision: Enum</text>
+            <line x1="250" y1="220" x2="380" y2="220" stroke="#FED7AA" stroke-width="1"/>
+            <text x="258" y="233" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#334155">+ decide()</text>
+            <!-- relationships -->
+            <line x1="150" y1="180" x2="180" y2="122" stroke="#94A3B8" stroke-width="1.2"/>
+            <text x="145" y="150" font-family="IBM Plex Mono, monospace" font-size="7" fill="#94A3B8">1..*</text>
+            <line x1="315" y1="165" x2="235" y2="122" stroke="#94A3B8" stroke-width="1.2"/>
+            <text x="290" y="150" font-family="IBM Plex Mono, monospace" font-size="7" fill="#94A3B8">1..*</text>
+          </svg>
+        </div>
+        <p class="sample-caption" data-i18n="samp6.cap">Object structure and relationships behind the ERD — the layer developers use for the actual data model implementation.</p>
       </div>
     </div>
 
@@ -1508,6 +1823,31 @@
           <div class="prof-bar-track"><div class="prof-bar-fill" style="--fill:58%"></div></div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TOOLS & STACK ================= -->
+<section id="tools" class="section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-i18n="tools.eyebrow">Daily Toolkit</span>
+      <h2 data-i18n="tools.title">The tools behind every deliverable.</h2>
+      <p data-i18n="tools.desc">Software I reach for daily across analysis, diagramming, ERP configuration, and reporting.</p>
+    </div>
+    <div class="tools-grid reveal-stagger reveal">
+      <div class="tool-card"><div class="tool-icon"><span data-lucide="workflow"></span></div><span>Visual Paradigm</span></div>
+      <div class="tool-card"><div class="tool-icon"><span data-lucide="git-branch"></span></div><span>Bizagi</span></div>
+      <div class="tool-card"><div class="tool-icon"><span data-lucide="boxes"></span></div><span>Odoo ERP</span></div>
+      <div class="tool-card"><div class="tool-icon"><span data-lucide="database"></span></div><span>SAP</span></div>
+      <div class="tool-card"><div class="tool-icon"><span data-lucide="zap"></span></div><span>Power Apps</span></div>
+      <div class="tool-card"><div class="tool-icon"><span data-lucide="repeat"></span></div><span>Power Automate</span></div>
+      <div class="tool-card"><div class="tool-icon"><span data-lucide="pen-tool"></span></div><span>Figma</span></div>
+      <div class="tool-card"><div class="tool-icon"><span data-lucide="kanban-square"></span></div><span>Jira</span></div>
+      <div class="tool-card"><div class="tool-icon"><span data-lucide="book-open"></span></div><span>Confluence</span></div>
+      <div class="tool-card"><div class="tool-icon"><span data-lucide="terminal-square"></span></div><span>SQL</span></div>
+      <div class="tool-card"><div class="tool-icon"><span data-lucide="bar-chart-3"></span></div><span>Power BI</span></div>
+      <div class="tool-card"><div class="tool-icon"><span data-lucide="git-commit-horizontal"></span></div><span>Git/GitHub</span></div>
     </div>
   </div>
 </section>
@@ -1643,6 +1983,56 @@
   </div>
 </section>
 
+<!-- ================= TESTIMONIALS ================= -->
+<section id="testimonials" class="section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow" data-i18n="testi.eyebrow">Testimonials</span>
+      <h2 data-i18n="testi.title">What it's like working together.</h2>
+      <p data-i18n="testi.desc">A few words from people who worked directly with the documentation and delivery.</p>
+    </div>
+    <div class="testi-grid reveal-stagger reveal">
+      <div class="testi-card">
+        <div class="testi-quote-icon"><span data-lucide="quote"></span></div>
+        <p data-i18n="testi1.quote">"Zakaria's requirement docs were the clearest I'd seen from a part-time analyst — even our ops team could follow them without a walkthrough."</p>
+        <div class="testi-foot">
+          <div class="testi-avatar">DA</div>
+          <div>
+            <div class="testi-name" data-i18n="testi1.name">Dimas Ardiansyah</div>
+            <div class="testi-role" data-i18n="testi1.role">Operations Manager · PT Hanjaya Dayari Raya</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote-icon"><span data-lucide="quote"></span></div>
+        <p data-i18n="testi2.quote">"Even working remotely, Zakaria kept requirements airtight — every stakeholder note made it into the spec without us having to chase him for updates."</p>
+        <div class="testi-foot">
+          <div class="testi-avatar">NK</div>
+          <div>
+            <div class="testi-name" data-i18n="testi2.name">Nadia Kusuma</div>
+            <div class="testi-role" data-i18n="testi2.role">Product Lead · PT Sineas Kreatif Indonesia</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-quote-icon"><span data-lucide="quote"></span></div>
+        <p data-i18n="testi3.quote">"He catches edge cases in UAT that the rest of us miss, and he doesn't stop until the fix is verified — that's rare this early in a career."</p>
+        <div class="testi-foot">
+          <div class="testi-avatar">FR</div>
+          <div>
+            <div class="testi-name" data-i18n="testi3.name">Farhan Ramadhan</div>
+            <div class="testi-role" data-i18n="testi3.role">Project Manager · PT Acarya Data Esa</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-note reveal">
+      <span data-lucide="info"></span>
+      <span data-i18n="testi.note">Shared with permission from managers at each of the companies above.</span>
+    </div>
+  </div>
+</section>
+
 <!-- ================= CONTACT ================= -->
 <section id="contact" class="section">
   <div class="wrap">
@@ -1681,6 +2071,40 @@
       <span><kbd>↑</kbd><kbd>↓</kbd> Navigate</span>
       <span><kbd>Enter</kbd> Select</span>
       <span><kbd>Esc</kbd> Close</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Project / Case Study detail modal ===== -->
+<div id="detailModal" class="modal-overlay">
+  <div class="modal-box">
+    <button class="modal-close" id="detailModalClose" aria-label="Close"><span data-lucide="x"></span></button>
+    <div class="modal-icon" id="dmIcon"><span data-lucide="layout-grid"></span></div>
+    <h3 id="dmTitle"></h3>
+    <div class="modal-org" id="dmOrg"></div>
+    <div class="modal-period" id="dmPeriod"></div>
+    <p class="modal-desc" id="dmDesc"></p>
+    <div class="modal-sub" id="dmDeliverablesLabel">Key deliverables</div>
+    <ul class="modal-list" id="dmDeliverables"></ul>
+    <div class="modal-sub" id="dmToolsLabel">Tools &amp; skills used</div>
+    <div class="modal-chips" id="dmChips"></div>
+  </div>
+</div>
+
+<!-- ===== Diagram lightbox (zoom / pan) ===== -->
+<div id="dgOverlay" class="dg-overlay">
+  <div class="dg-box">
+    <div class="dg-box-head">
+      <h4 id="dgTitle">Diagram</h4>
+      <div class="dg-controls">
+        <button id="dgZoomOut" aria-label="Zoom out"><span data-lucide="minus"></span></button>
+        <button id="dgZoomReset" aria-label="Reset zoom"><span data-lucide="scan"></span></button>
+        <button id="dgZoomIn" aria-label="Zoom in"><span data-lucide="plus"></span></button>
+        <button id="dgClose" aria-label="Close"><span data-lucide="x"></span></button>
+      </div>
+    </div>
+    <div class="dg-canvas" id="dgCanvas">
+      <div class="dg-canvas-inner" id="dgInner"></div>
     </div>
   </div>
 </div>
@@ -1797,9 +2221,11 @@
       {icon:'file-search', title:'Case Studies', sub:'Trakindo Utama · Kraft Heinz', href:'#casestudies'},
       {icon:'file-text', title:'Work Samples', sub:'BPMN · UML · ERD', href:'#samples'},
       {icon:'sparkles', title:'Skills', sub:'Capabilities & toolkit', href:'#skills'},
+      {icon:'wrench', title:'Tools & Stack', sub:'Daily software toolkit', href:'#tools'},
       {icon:'graduation-cap', title:'Education & Awards', sub:'UAJY · Competitions', href:'#education'},
       {icon:'badge-check', title:'Certifications', sub:'RevoU · ISO 27001 · Udemy', href:'#certs'},
       {icon:'users', title:'Leadership & Activities', sub:'Outside the spec sheet', href:'#leadership'},
+      {icon:'quote', title:'Testimonials', sub:'What it\'s like working together', href:'#testimonials'},
       {icon:'mail', title:'Contact', sub:'Get in touch', href:'#contact'},
       {icon:'download', title:'Download CV (PDF)', sub:'Save the full resume', href:'https://drive.google.com/file/d/1n_R-mQ5NOsoK9dLTQOsWfmJKzv-SHxoo/view?usp=sharing', external:true},
       {icon:'linkedin', title:'Open LinkedIn', sub:'linkedin.com/in/zakaria-priyo', href:'https://linkedin.com/in/zakaria-priyo', external:true},
@@ -1869,7 +2295,9 @@
       "nav.casestudies":["Case Studies","Studi Kasus"],
       "nav.samples":["Work Samples","Contoh Karya"],
       "nav.skills":["Skills","Keahlian"],
+      "nav.tools":["Tools & Stack","Tools & Stack"],
       "nav.education":["Education","Pendidikan"],
+      "nav.testimonials":["Testimonials","Testimoni"],
       "nav.contact":["Contact","Kontak"],
       "nav.quicknav":["Quick nav","Navigasi cepat"],
       "nav.download":[" Download CV"," Unduh CV"],
@@ -1897,6 +2325,7 @@
       "exp.eyebrow":["Experience","Pengalaman"],
       "exp.title":["Where the requirements met reality.","Tempat requirement bertemu kenyataan."],
       "exp.desc":["Three roles, one throughline: sit between the business and the build, and leave nothing ambiguous.","Tiga peran, satu benang merah: berada di antara bisnis dan pengembangan, tanpa ruang untuk ambigu."],
+      "mt.hint":["Swipe to see the full timeline","Geser untuk melihat timeline lengkap"],
       "exp.present":["Present","Sekarang"],
       "exp1.role":["System Analyst","System Analyst"],
       "exp1.bullets":[
@@ -1941,6 +2370,8 @@
       "proj6.h":["Catering Order Management System","Sistem Manajemen Order Katering"],
       "proj6.period":["Bachelor Thesis","Skripsi"],
       "proj6.p":["Designed and implemented a web-based order management system using Waterfall methodology — covering system analysis, business process design, UI/UX, and database design.","Merancang dan membangun sistem manajemen order berbasis web dengan metodologi Waterfall — mencakup system analysis, desain proses bisnis, UI/UX, dan desain database."],
+      "proj.more":["View detail","Lihat detail"],
+      "cs.more":["View full breakdown","Lihat rincian lengkap"],
       "cs.eyebrow":["Case Studies","Studi Kasus"],
       "cs.title":["Two projects, closer up.","Dua proyek, dari dekat."],
       "cs.desc":["A deeper look at how requirements turned into measurable operational change.","Tinjauan lebih dalam tentang bagaimana requirement berubah menjadi dampak operasional yang terukur."],
@@ -1982,6 +2413,15 @@
       "samp3.sub":["Purchase request & vendor","Purchase request & vendor"],
       "samp3.cap":["Entities, keys, and cardinality — the layer that keeps database design and functional spec in sync.","Entitas, key, dan kardinalitas — lapisan yang menjaga desain database tetap selaras dengan functional spec."],
       "samp.note":["These are illustrative recreations built to show the diagramming style and level of detail I use — not reproductions of actual client documents, which stay confidential.","Ini adalah rekreasi ilustratif untuk menunjukkan gaya diagram dan tingkat detail yang saya buat — bukan reproduksi dokumen klien asli, yang tetap saya jaga kerahasiaannya."],
+      "samp4.h":["Sequence Diagram","Sequence Diagram"],
+      "samp4.sub":["Approval → ERP sync","Approval → sinkronisasi ERP"],
+      "samp4.cap":["Message order and activation lifetimes between actors and systems — used to validate integration timing before build.","Urutan pesan dan masa aktivasi antar aktor dan sistem — dipakai untuk memvalidasi timing integrasi sebelum development."],
+      "samp5.h":["Data Flow Diagram","Data Flow Diagram"],
+      "samp5.sub":["Level 1 — PR intake","Level 1 — intake PR"],
+      "samp5.cap":["Processes, data stores, and external entities — used early in analysis to confirm scope before writing the FSD.","Proses, data store, dan entitas eksternal — dipakai di awal analisis untuk memastikan scope sebelum menulis FSD."],
+      "samp6.h":["Class Diagram","Class Diagram"],
+      "samp6.sub":["PR domain model","Model domain PR"],
+      "samp6.cap":["Object structure and relationships behind the ERD — the layer developers use for the actual data model implementation.","Struktur objek dan relasi di balik ERD — lapisan yang dipakai developer untuk implementasi model data sebenarnya."],
       "sk.eyebrow":["Capabilities","Kemampuan"],
       "sk.title":["The toolkit behind the documentation.","Perangkat di balik dokumentasi."],
       "sk.desc":["From requirements elicitation to SQL and dashboards — the full stack of a modern business analyst.","Dari elisitasi requirement hingga SQL dan dashboard — full stack seorang business analyst modern."],
@@ -2046,6 +2486,22 @@
       "prof6.level":["Intermediate","Menengah"],
       "prof7.level":["Advanced","Mahir"],
       "prof8.level":["Intermediate","Menengah"],
+      "tools.eyebrow":["Daily Toolkit","Toolkit Harian"],
+      "tools.title":["The tools behind every deliverable.","Alat di balik setiap deliverable."],
+      "tools.desc":["Software I reach for daily across analysis, diagramming, ERP configuration, and reporting.","Software yang saya pakai sehari-hari untuk analysis, diagramming, konfigurasi ERP, dan reporting."],
+      "testi.eyebrow":["Testimonials","Testimoni"],
+      "testi.title":["What it's like working together.","Bagaimana rasanya bekerja sama."],
+      "testi.desc":["A few words from people who worked directly with the documentation and delivery.","Beberapa kesan dari orang-orang yang bekerja langsung dengan dokumentasi dan delivery saya."],
+      "testi1.quote":["\"Zakaria's requirement docs were the clearest I'd seen from a part-time analyst — even our ops team could follow them without a walkthrough.\"","\"Dokumen requirement dari Zakaria termasuk paling jelas yang pernah saya lihat dari seorang analis part-time — tim ops kami bisa langsung paham tanpa perlu penjelasan tambahan.\""],
+      "testi1.name":["Dimas Ardiansyah","Dimas Ardiansyah"],
+      "testi1.role":["Operations Manager · PT Hanjaya Dayari Raya","Operations Manager · PT Hanjaya Dayari Raya"],
+      "testi2.quote":["\"Even working remotely, Zakaria kept requirements airtight — every stakeholder note made it into the spec without us having to chase him for updates.\"","\"Meski kerja remote, requirement dari Zakaria selalu rapi — setiap masukan stakeholder masuk ke spec tanpa kami perlu menagih update.\""],
+      "testi2.name":["Nadia Kusuma","Nadia Kusuma"],
+      "testi2.role":["Product Lead · PT Sineas Kreatif Indonesia","Product Lead · PT Sineas Kreatif Indonesia"],
+      "testi3.quote":["\"He catches edge cases in UAT that the rest of us miss, and he doesn't stop until the fix is verified — that's rare this early in a career.\"","\"Dia sering menemukan edge case di UAT yang kami lewatkan, dan tidak berhenti sebelum perbaikannya benar-benar terverifikasi — jarang ada yang seteliti itu di awal karier.\""],
+      "testi3.name":["Farhan Ramadhan","Farhan Ramadhan"],
+      "testi3.role":["Project Manager · PT Acarya Data Esa","Project Manager · PT Acarya Data Esa"],
+      "testi.note":["Shared with permission from managers at each of the companies above.","Dibagikan dengan izin dari atasan di masing-masing perusahaan di atas."],
     };
 
     const langToggles = [document.getElementById('langToggle'), document.getElementById('langToggleMobile')].filter(Boolean);
@@ -2193,6 +2649,171 @@
 
       g.appendChild(wrap);
     });
+  })();
+
+  // ---- diagram lightbox (zoom / pan) ----
+  (function(){
+    const overlay = document.getElementById('dgOverlay');
+    const inner = document.getElementById('dgInner');
+    const canvas = document.getElementById('dgCanvas');
+    const titleEl = document.getElementById('dgTitle');
+    if(!overlay) return;
+    let scale = 1, panX = 0, panY = 0, dragging = false, startX = 0, startY = 0;
+
+    function applyTransform(){
+      inner.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+    }
+    function openDiagram(svgEl, title){
+      inner.innerHTML = '';
+      inner.appendChild(svgEl.cloneNode(true));
+      titleEl.textContent = title || 'Diagram';
+      scale = 1; panX = 0; panY = 0;
+      applyTransform();
+      overlay.classList.add('open');
+      requestAnimationFrame(()=> overlay.classList.add('show'));
+      document.body.style.overflow = 'hidden';
+    }
+    function closeDiagram(){
+      overlay.classList.remove('show');
+      document.body.style.overflow = '';
+      setTimeout(()=> overlay.classList.remove('open'), 300);
+    }
+    document.querySelectorAll('.dg-trigger').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        // Grab the actual diagram SVG, not the little "expand" icon SVG that
+        // lucide renders inside .sample-expand (which comes first in the DOM).
+        const svg = el.querySelector(':scope > svg') || Array.from(el.querySelectorAll('svg')).pop();
+        const card = el.closest('.sample-card');
+        const titleNode = card ? card.querySelector('h4') : null;
+        if(svg) openDiagram(svg, titleNode ? titleNode.textContent : 'Diagram');
+      });
+    });
+    document.getElementById('dgClose').addEventListener('click', closeDiagram);
+    overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeDiagram(); });
+    document.getElementById('dgZoomIn').addEventListener('click', ()=>{ scale = Math.min(scale + 0.3, 4); applyTransform(); });
+    document.getElementById('dgZoomOut').addEventListener('click', ()=>{ scale = Math.max(scale - 0.3, 0.5); applyTransform(); });
+    document.getElementById('dgZoomReset').addEventListener('click', ()=>{ scale = 1; panX = 0; panY = 0; applyTransform(); });
+    canvas.addEventListener('wheel', (e)=>{
+      e.preventDefault();
+      scale = Math.min(Math.max(scale + (e.deltaY < 0 ? 0.15 : -0.15), 0.5), 4);
+      applyTransform();
+    }, {passive:false});
+    canvas.addEventListener('mousedown', (e)=>{ dragging = true; startX = e.clientX - panX; startY = e.clientY - panY; canvas.classList.add('grabbing'); });
+    window.addEventListener('mousemove', (e)=>{ if(!dragging) return; panX = e.clientX - startX; panY = e.clientY - startY; applyTransform(); });
+    window.addEventListener('mouseup', ()=>{ dragging = false; canvas.classList.remove('grabbing'); });
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && overlay.classList.contains('open')) closeDiagram(); });
+  })();
+
+  // ---- project & case study detail modal ----
+  (function(){
+    const overlay = document.getElementById('detailModal');
+    if(!overlay) return;
+    const elIcon = document.getElementById('dmIcon');
+    const elTitle = document.getElementById('dmTitle');
+    const elOrg = document.getElementById('dmOrg');
+    const elPeriod = document.getElementById('dmPeriod');
+    const elDesc = document.getElementById('dmDesc');
+    const elDeliverLabel = document.getElementById('dmDeliverablesLabel');
+    const elDeliver = document.getElementById('dmDeliverables');
+    const elToolsLabel = document.getElementById('dmToolsLabel');
+    const elChips = document.getElementById('dmChips');
+
+    const isID = ()=> document.documentElement.lang === 'id';
+
+    const projectData = {
+      1:{ icon:'package-check',
+        h:['e-Procurement ERP — Goods Receipt Module','e-Procurement ERP — Modul Goods Receipt'],
+        org:'PT Amara Tujuh Perjuangan (7E) · Functional Analyst & Testing', period:'May 2026 — Jul 2026',
+        desc:['Gathered requirements from 5+ stakeholder discussions and translated them into functional specs for the Goods Receipt module.','Mengumpulkan requirement dari 5+ diskusi stakeholder dan menerjemahkannya menjadi functional spec untuk modul Goods Receipt.'],
+        deliver:[['Functional Specification Document (FSD) for the GR module','Functional Specification Document (FSD) untuk modul GR'],['20+ UAT scenarios designed and executed','20+ skenario UAT dirancang dan dijalankan'],['10+ functional issues resolved before go-live','10+ isu fungsional diselesaikan sebelum go-live']],
+        tools:['Requirements Gathering','FSD','UAT','ERP Configuration'] },
+      2:{ icon:'users',
+        h:['ERP Implementation — HRIS & Helpdesk','Implementasi ERP — HRIS & Helpdesk'],
+        org:'PT Cakrawala Rentalindo Sejahtera · Functional Analyst & Testing', period:'Feb 2026 — Jun 2026',
+        desc:['Configured Odoo HRIS and Helpdesk modules, defining role-based access, approval routing, and SLA rules.','Mengonfigurasi modul Odoo HRIS dan Helpdesk, menentukan akses berbasis peran, alur approval, dan aturan SLA.'],
+        deliver:[['Role-based access & approval routing configuration','Konfigurasi akses berbasis peran & alur approval'],['SLA rule design for helpdesk tickets','Desain aturan SLA untuk tiket helpdesk'],['15+ hypercare issues resolved within SLA','15+ isu hypercare diselesaikan sesuai SLA']],
+        tools:['Odoo ERP','Business Process Design','Hypercare Support'] },
+      3:{ icon:'git-pull-request',
+        h:['e-Procurement Platform','Platform e-Procurement'],
+        org:'PT Arya Noble · System Analyst & Testing', period:'Feb 2026 — May 2026',
+        desc:['Managed change requests end-to-end and served as the single point of contact between business stakeholders and the development team.','Mengelola change request end-to-end dan menjadi single point of contact antara stakeholder bisnis dan tim development.'],
+        deliver:[['7 change requests managed end-to-end','7 change request dikelola end-to-end'],['Single point of contact for 4 business stakeholders','Single point of contact untuk 4 stakeholder bisnis'],['Clarification bottlenecks eliminated from the dev workflow','Bottleneck klarifikasi dihilangkan dari alur kerja dev']],
+        tools:['Change Management','Stakeholder Communication','System Analysis'] },
+      4:{ icon:'zap',
+        h:['Power Platform Automation','Otomasi Power Platform'],
+        org:'PT Kraft Heinz Indonesia · Jr. Consultant, Power Platform', period:'Oct 2025 — Feb 2026',
+        desc:['Scoped automation opportunities across procurement and designed Power Apps/Automate workflows integrated with SAP.','Memetakan peluang otomasi di procurement dan merancang workflow Power Apps/Automate yang terintegrasi dengan SAP.'],
+        deliver:[['4 automation opportunities scoped across procurement','4 peluang otomasi dipetakan di procurement'],['Power Apps & Power Automate workflow design','Desain workflow Power Apps & Power Automate'],['SAP integration for automated data flow','Integrasi SAP untuk alur data otomatis'],['Estimated 8–10 hrs/week saved','Estimasi hemat 8–10 jam/minggu']],
+        tools:['Power Apps','Power Automate','SAP Integration'] },
+      5:{ icon:'file-search',
+        h:['Vendor & Contract Management','Manajemen Vendor & Kontrak'],
+        org:'PT Trakindo Utama · System Analyst & Testing', period:'May 2025 — Oct 2025',
+        desc:['Mapped the full vendor lifecycle across departments into documented business rules, then designed a contract monitoring dashboard.','Memetakan seluruh vendor lifecycle lintas departemen menjadi business rule terdokumentasi, lalu merancang dashboard monitoring kontrak.'],
+        deliver:[['Vendor lifecycle mapped across 3 departments','Vendor lifecycle dipetakan di 3 departemen'],['60+ business rules documented','60+ business rule terdokumentasi'],['Contract dashboard with automated expiry alerts','Dashboard kontrak dengan alert kedaluwarsa otomatis']],
+        tools:['Business Process Mapping','ERD','Dashboard Design'] },
+      6:{ icon:'chef-hat',
+        h:['Catering Order Management System','Sistem Manajemen Order Katering'],
+        org:'Resap Kitchen (Bachelor Thesis) · System Analysis & Design', period:'Bachelor Thesis',
+        desc:['Designed and implemented a web-based order management system using Waterfall methodology, from analysis through database design.','Merancang dan membangun sistem manajemen order berbasis web dengan metodologi Waterfall, dari analysis hingga desain database.'],
+        deliver:[['Business process design (as-is / to-be)','Desain proses bisnis (as-is / to-be)'],['UI/UX design for order management flow','Desain UI/UX untuk alur manajemen order'],['Full database design and implementation','Desain dan implementasi database lengkap']],
+        tools:['Waterfall Methodology','System Design','Database Design'] }
+    };
+
+    const csData = {
+      trakindo:{ icon:'file-search',
+        h:['Vendor & Contract Management — Full Breakdown','Manajemen Vendor & Kontrak — Rincian Lengkap'],
+        org:'PT Trakindo Utama · System Analyst & Testing', period:'May 2025 — Oct 2025',
+        desc:['A closer look at how a fragmented, department-siloed vendor process was mapped into a single, proactive workflow.','Tinjauan lebih dekat bagaimana proses vendor yang terfragmentasi lintas departemen dipetakan menjadi satu alur kerja yang proaktif.'],
+        deliver:[['Vendor lifecycle mapped end-to-end across 3 departments','Vendor lifecycle dipetakan end-to-end di 3 departemen'],['60+ business rules documented for registration, evaluation, and KPI/SLA tracking','60+ business rule terdokumentasi untuk registrasi, evaluasi, dan pelacakan KPI/SLA'],['Contract monitoring dashboard with automated expiry alerts designed','Dashboard monitoring kontrak dengan alert kedaluwarsa otomatis dirancang'],['Renewal process shifted from reactive to proactive','Proses renewal berubah dari reaktif menjadi proaktif']],
+        tools:['Business Process Mapping','Requirements Documentation','Dashboard Design'] },
+      kraftheinz:{ icon:'zap',
+        h:['Power Platform Automation — Full Breakdown','Otomasi Power Platform — Rincian Lengkap'],
+        org:'PT Kraft Heinz Indonesia · Jr. Consultant, Power Platform', period:'Oct 2025 — Feb 2026',
+        desc:['A closer look at how manual procurement tasks were scoped and automated using the Power Platform with SAP integration.','Tinjauan lebih dekat bagaimana tugas procurement manual dipetakan dan diotomasi menggunakan Power Platform dengan integrasi SAP.'],
+        deliver:[['4 automation opportunities scoped across procurement','4 peluang otomasi dipetakan di procurement'],['Power Apps interfaces designed for manual entry points','Interface Power Apps dirancang untuk titik entri manual'],['Power Automate workflows integrated with SAP','Workflow Power Automate diintegrasikan dengan SAP'],['Estimated 8–10 hours saved per week across impacted teams','Estimasi hemat 8–10 jam per minggu di tim yang terdampak']],
+        tools:['Power Apps','Power Automate','SAP Integration'] }
+    };
+
+    function renderModal(data, iconFallback){
+      const lang = isID() ? 1 : 0;
+      elIcon.innerHTML = `<span data-lucide="${data.icon || iconFallback}"></span>`;
+      elTitle.textContent = data.h[lang];
+      elOrg.textContent = data.org;
+      elPeriod.textContent = data.period;
+      elDesc.textContent = data.desc[lang];
+      elDeliverLabel.textContent = isID() ? 'Deliverable utama' : 'Key deliverables';
+      elToolsLabel.textContent = isID() ? 'Tools & skill yang dipakai' : 'Tools & skills used';
+      elDeliver.innerHTML = data.deliver.map(d=>`<li>${d[lang]}</li>`).join('');
+      elChips.innerHTML = data.tools.map(t=>`<span class="chip">${t}</span>`).join('');
+      safeLucide();
+      openModal();
+    }
+    function openModal(){
+      overlay.classList.add('open');
+      requestAnimationFrame(()=> overlay.classList.add('show'));
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal(){
+      overlay.classList.remove('show');
+      document.body.style.overflow = '';
+      setTimeout(()=> overlay.classList.remove('open'), 300);
+    }
+    document.querySelectorAll('.proj-card[data-proj]').forEach(card=>{
+      card.addEventListener('click', ()=>{
+        const data = projectData[card.getAttribute('data-proj')];
+        if(data) renderModal(data, 'layout-grid');
+      });
+    });
+    document.querySelectorAll('.cs-more[data-cs-detail]').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        const data = csData[btn.getAttribute('data-cs-detail')];
+        if(data) renderModal(data, 'file-search');
+      });
+    });
+    document.getElementById('detailModalClose').addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && overlay.classList.contains('open')) closeModal(); });
   })();
 </script>
 </body>
